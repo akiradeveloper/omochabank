@@ -1,0 +1,1 @@
+cargo run -- sample.csv > accounts.csv
