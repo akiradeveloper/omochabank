@@ -53,6 +53,6 @@ mod tests {
             rows.push(row.unwrap());
         }
         dbg!(&rows);
-        assert_eq!(rows.len(), 9);
+        assert_eq!(rows.len(), 10);
     }
 }
