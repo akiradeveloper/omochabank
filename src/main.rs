@@ -3,13 +3,15 @@ use std::collections::HashMap;
 mod compute;
 mod reader;
 
+// Non-negative amount.
+type Amount = rust_decimal::Decimal;
 type ClientId = u16;
 type TxId = u32;
 
 #[derive(Debug)]
 pub enum TxCommand {
-    Deposit { tx: TxId, amount: f32 },
-    Withdrawal { tx: TxId, amount: f32 },
+    Deposit { tx: TxId, amount: Amount },
+    Withdrawal { tx: TxId, amount: Amount },
     Dispute { tx: TxId },
     // Retract dispute.
     Resolve { tx: TxId },

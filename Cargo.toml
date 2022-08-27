@@ -9,4 +9,4 @@ edition = "2021"
 csv = "1.1"
 num-traits = "0.2"
 rust_decimal = "1.26"
-serde = "1"
+serde = { version = "1", features = ["derive"] }
