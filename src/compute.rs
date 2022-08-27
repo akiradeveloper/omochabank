@@ -1,7 +1,6 @@
 use crate::*;
 use std::collections::HashMap;
 
-// There is no assumption on the limit of amount.
 type DiffAmount = rust_decimal::Decimal;
 
 // Deposite and Withdrawal are different only by the sign.
@@ -88,7 +87,6 @@ impl TxCompute {
         }
         match command {
             TxCommand::Deposit { tx, amount } => {
-                let amount = amount.try_into().unwrap();
                 // eff = effect
                 // I name this because it is an effect to the balance.
                 let eff = ChangeDeposit {
@@ -101,7 +99,6 @@ impl TxCompute {
                 self.changes.insert(tx, eff);
             }
             TxCommand::Withdrawal { tx, amount } => {
-                let amount: DiffAmount = amount.try_into().unwrap();
                 let eff = ChangeDeposit {
                     add_available: -amount,
                     add_total: -amount,
@@ -166,9 +163,14 @@ impl TxCompute {
 
 #[cfg(test)]
 mod tests {
+    use crate::Amount;
     use crate::TxCommand::*;
 
     use super::DiffAmount;
+    fn amount(x: f32) -> Amount {
+        let amount: DiffAmount = x.try_into().unwrap();
+        amount
+    }
     fn to_f32(x: DiffAmount) -> f32 {
         use num_traits::cast::ToPrimitive;
         x.to_f32().unwrap()
@@ -189,8 +191,14 @@ mod tests {
     fn test_normal() {
         assert_eq!(
             run([
-                Deposit { tx: 1, amount: 3.0 },
-                Withdrawal { tx: 2, amount: 2.0 },
+                Deposit {
+                    tx: 1,
+                    amount: amount(3.0)
+                },
+                Withdrawal {
+                    tx: 2,
+                    amount: amount(2.0)
+                },
             ]),
             (1., 0., 1.)
         );
@@ -199,8 +207,14 @@ mod tests {
     fn test_mal_withdrawal() {
         assert_eq!(
             run([
-                Deposit { tx: 1, amount: 3.0 },
-                Withdrawal { tx: 2, amount: 4.0 },
+                Deposit {
+                    tx: 1,
+                    amount: amount(3.0)
+                },
+                Withdrawal {
+                    tx: 2,
+                    amount: amount(4.0)
+                },
             ]),
             (3., 0., 3.)
         );
@@ -209,8 +223,14 @@ mod tests {
     fn test_mal_dispute() {
         assert_eq!(
             run([
-                Deposit { tx: 1, amount: 3.0 },
-                Withdrawal { tx: 2, amount: 2.0 },
+                Deposit {
+                    tx: 1,
+                    amount: amount(3.0)
+                },
+                Withdrawal {
+                    tx: 2,
+                    amount: amount(2.0)
+                },
                 // This dispute should be denied.
                 Dispute { tx: 1 },
             ]),
@@ -221,8 +241,14 @@ mod tests {
     fn test_normal_dispute() {
         assert_eq!(
             run([
-                Deposit { tx: 1, amount: 3.0 },
-                Withdrawal { tx: 2, amount: 2.0 },
+                Deposit {
+                    tx: 1,
+                    amount: amount(3.0)
+                },
+                Withdrawal {
+                    tx: 2,
+                    amount: amount(2.0)
+                },
                 Dispute { tx: 2 },
             ]),
             (3., -2., 1.)
@@ -232,8 +258,14 @@ mod tests {
     fn test_resolve() {
         assert_eq!(
             run([
-                Deposit { tx: 1, amount: 3.0 },
-                Withdrawal { tx: 2, amount: 2.0 },
+                Deposit {
+                    tx: 1,
+                    amount: amount(3.0)
+                },
+                Withdrawal {
+                    tx: 2,
+                    amount: amount(2.0)
+                },
                 Dispute { tx: 2 },
                 Resolve { tx: 2 },
             ]),
@@ -244,8 +276,14 @@ mod tests {
     fn test_chargeback() {
         assert_eq!(
             run([
-                Deposit { tx: 1, amount: 3.0 },
-                Withdrawal { tx: 2, amount: 2.0 },
+                Deposit {
+                    tx: 1,
+                    amount: amount(3.0)
+                },
+                Withdrawal {
+                    tx: 2,
+                    amount: amount(2.0)
+                },
                 Dispute { tx: 2 },
                 Chargeback { tx: 2 },
             ]),
