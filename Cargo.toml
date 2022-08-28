@@ -7,6 +7,8 @@ edition = "2021"
 
 [dependencies]
 csv = "1.1"
-num-traits = "0.2"
-rust_decimal = "1.26"
+fixed = { version = "1.18", features = ["serde-str"] }
 serde = { version = "1", features = ["derive"] }
+
+[dev-dependencies]
+az = "1.2"
