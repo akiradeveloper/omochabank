@@ -4,7 +4,7 @@ use std::io::BufReader;
 use std::path::Path;
 
 #[derive(serde::Deserialize)]
-struct Row(String, ClientId, TxId, Option<rust_decimal::Decimal>);
+struct Row(String, ClientId, TxId, Option<fixed::types::I114F14>);
 
 pub fn parse(path: impl AsRef<Path>) -> std::io::Result<impl Iterator<Item = Option<Tx>>> {
     let f = File::open(path.as_ref()).unwrap();
@@ -48,14 +48,9 @@ mod tests {
     use super::*;
     #[test]
     fn test_parse_huge_number() {
-        use std::str::FromStr;
-        // Unfortunately, rust_decimal doesn't support inf scale.
-        // It's internal is only 96 bits.
-
-        // 2^90 + 0.1234
-        let x = "1237940039285380274899124224.1234";
-        // 1237940039285380274899124224.1 (rust_decimal v1.26)
-        dbg!(rust_decimal::Decimal::from_str(x).unwrap());
+        // 2^110 + 0.1234
+        let x = "1298074214633706907132624082305024.1234";
+        dbg!(Amount::from_str(x).unwrap());
     }
     #[test]
     fn test_parse() {

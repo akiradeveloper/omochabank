@@ -1,7 +1,7 @@
 use crate::*;
 use std::collections::HashMap;
 
-type DiffAmount = rust_decimal::Decimal;
+type DiffAmount = fixed::types::I114F14;
 
 // Deposite and Withdrawal are different only by the sign.
 #[derive(Debug)]
@@ -168,12 +168,11 @@ mod tests {
 
     use super::DiffAmount;
     fn amount(x: f32) -> Amount {
-        let amount: DiffAmount = x.try_into().unwrap();
-        amount
+        Amount::from_num(x)
     }
     fn to_f32(x: DiffAmount) -> f32 {
-        use num_traits::cast::ToPrimitive;
-        x.to_f32().unwrap()
+        use az::Cast;
+        x.cast()
     }
     fn run(xs: impl IntoIterator<Item = crate::TxCommand>) -> (f32, f32, f32) {
         let mut st = super::TxCompute::new();

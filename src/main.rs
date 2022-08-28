@@ -4,7 +4,7 @@ mod compute;
 mod reader;
 
 // Non-negative amount.
-type Amount = rust_decimal::Decimal;
+type Amount = fixed::types::I114F14;
 type ClientId = u16;
 type TxId = u32;
 
