@@ -7,7 +7,7 @@ use std::path::Path;
 struct Row(String, ClientId, TxId, Option<fixed::types::I114F14>);
 
 pub fn parse(path: impl AsRef<Path>) -> std::io::Result<impl Iterator<Item = Option<Tx>>> {
-    let f = File::open(path.as_ref()).unwrap();
+    let f = File::open(path.as_ref())?;
     let rdr = BufReader::new(f);
     let rdr = csv::ReaderBuilder::new()
         .has_headers(true)

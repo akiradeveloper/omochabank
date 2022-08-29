@@ -3,7 +3,7 @@ use std::collections::HashMap;
 
 type DiffAmount = fixed::types::I114F14;
 
-// Deposite and Withdrawal are different only by the sign.
+// Deposit and Withdrawal are different only by the sign.
 #[derive(Debug)]
 struct ChangeDeposit {
     add_available: DiffAmount,
