@@ -29,7 +29,7 @@ pub fn parse(path: impl AsRef<Path>) -> std::io::Result<impl Iterator<Item = Opt
             }),
             ("resolve", cli, tx, None) => Some(Tx {
                 client_id: cli,
-                command: TxCommand::Dispute { tx },
+                command: TxCommand::Resolve { tx },
             }),
             ("chargeback", cli, tx, None) => Some(Tx {
                 client_id: cli,
